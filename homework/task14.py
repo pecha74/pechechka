@@ -44,3 +44,5 @@ for num in mass:
         else:
             print(f"Для числа {num} нет минимального расстояния т.к. элемент в массиве один")
         printed.add(num)
+
+        

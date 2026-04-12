@@ -9,4 +9,5 @@ print("Массив изначальный:", mass)
 for i in range(N):
     mass[i] += 1
 
+
 print("Массив новый:", mass)
