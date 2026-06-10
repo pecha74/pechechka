@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Статистика</h2>
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Доходы</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ income }} ₽</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-header">Расходы</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ expense }} ₽</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Баланс</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ balance }} ₽</h5>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

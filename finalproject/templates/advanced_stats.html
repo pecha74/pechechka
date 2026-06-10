@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>📊 Расширенная статистика</h2>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">📅 Средний расход в день (за 30 дней)</div>
+            <div class="card-body">
+                <h3 class="card-title">{{ avg_daily_expense }} ₽</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">📝 Всего операций</div>
+            <div class="card-body">
+                <h3 class="card-title">{{ total_operations }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">📈 Динамика доходов и расходов по месяцам</div>
+            <div class="card-body">
+                <canvas id="monthlyChart" style="max-width: 100%; height: 400px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">🏆 Топ-5 категорий расходов</div>
+            <div class="card-body">
+                <canvas id="topCategoriesChart" style="max-width: 100%; height: 400px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Данные из Flask (передаются как JSON-строки)
+    const months = {{ months | safe }};
+    const incomes = {{ incomes | safe }};
+    const expenses = {{ expenses | safe }};
+    const catNames = {{ cat_names | safe }};
+    const catAmounts = {{ cat_amounts | safe }};
+
+    // Проверка, есть ли данные
+    if (months.length === 0) {
+        document.getElementById('monthlyChart').outerHTML = '<div class="alert alert-warning">Нет данных для отображения динамики за последние 12 месяцев.</div>';
+    } else {
+        // График динамики
+        const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(ctxMonthly, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: 'Доходы (₽)',
+                        data: incomes,
+                        borderColor: 'rgba(40, 167, 69, 1)',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        tension: 0.1,
+                        fill: true
+                    },
+                    {
+                        label: 'Расходы (₽)',
+                        data: expenses,
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                        tension: 0.1,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw + ' ₽';
+                            }
+                        }
+                    },
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Сумма (₽)' } }
+                }
+            }
+        });
+    }
+
+    // Топ-5 категорий
+    if (catNames.length === 0) {
+        document.getElementById('topCategoriesChart').outerHTML = '<div class="alert alert-warning">Нет расходов для отображения топ-категорий.</div>';
+    } else {
+        const ctxTop = document.getElementById('topCategoriesChart').getContext('2d');
+        new Chart(ctxTop, {
+            type: 'bar',
+            data: {
+                labels: catNames,
+                datasets: [{
+                    label: 'Расходы (₽)',
+                    data: catAmounts,
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    tooltip: { callbacks: { label: function(context) { return context.raw + ' ₽'; } } },
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Сумма (₽)' } }
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

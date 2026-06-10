@@ -51,7 +51,7 @@ kitchen_copy = kitchen
 
 print(kitchen)
 
-#del kitchen["friedge"] удаление из списка
+# del kitchen["friedge"] удаление из списка
 
 #print("friedge" in kitchen) #будет ТРУ
 

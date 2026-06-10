@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Все операции</h2>
+
+<!-- Форма фильтрации -->
+<div class="card mb-4">
+    <div class="card-header">
+         Фильтр операций
+    </div>
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('index') }}" class="row g-3">
+            <div class="col-md-3">
+                <label for="date_from" class="form-label">Дата с</label>
+                <input type="text" class="form-control" id="date_from" name="date_from" placeholder="01/01/2024" value="{{ date_from }}">
+            </div>
+            <div class="col-md-3">
+                <label for="date_to" class="form-label">Дата по</label>
+                <input type="text" class="form-control" id="date_to" name="date_to" placeholder="31/12/2024" value="{{ date_to }}">
+            </div>
+            <div class="col-md-3">
+                <label for="category" class="form-label">Категория</label>
+                <select class="form-select" id="category" name="category">
+                    <option value="">Все категории</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary me-2">Применить</button>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Сбросить</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Таблица операций -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Категория</th>
+            <th>Сумма</th>
+            <th>Тип</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for op in operations %}
+        <tr>
+            <td>{{ op.date }}</td>
+            <td>{{ op.category }}</td>
+            <td>{{ op.amount }} ₽</td>
+            <td>
+                {% if op.type == 'income' %}
+                    <span class="badge bg-success">Доход</span>
+                {% else %}
+                    <span class="badge bg-danger">Расход</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="/edit/{{ op.id }}" class="btn btn-sm btn-warning"></a>
+                <a href="/delete/{{ op.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Удалить запись?')">🗑️</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" class="text-center">Нет операций, удовлетворяющих фильтру. Добавьте первую!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

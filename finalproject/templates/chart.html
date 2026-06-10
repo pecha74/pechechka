@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Расходы по категориям</h2>
+<div style="width: 400px; margin: 0 auto;">
+    <canvas id="expenseChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('expenseChart').getContext('2d');
+    const expenseChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: {{ categories | safe }},
+            datasets: [{
+                label: 'Сумма расходов (₽)',
+                data: {{ amounts | safe }},
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Структура расходов' }
+            }
+        }
+    });
+</script>
+
+{% if not categories %}
+    <p>Нет расходов для отображения.</p>
+{% endif %}
+{% endblock %}
