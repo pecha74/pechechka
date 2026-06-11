@@ -52,7 +52,7 @@ while 'x' in field and mistakes > 0:
             found = True
     
     if not found:
-        mistakes -= 1 # -= уменьшает счетчик на 1
+        mistakes -= 1
         print(f"Осталось попыток: {mistakes}")
     else:
         print("Угадал!")

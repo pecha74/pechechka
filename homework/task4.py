@@ -15,3 +15,19 @@
 # Наибольшее число 130
 
 # Задачу решить без функций max и прочих.
+
+x = 10
+y = 15
+z = 2
+
+if x > y and x > z:
+    largest = x
+elif y > x and y > z:
+    largest = y
+else:
+    largest = z
+
+print("Наибольшее число: ", largest)
+
+
+
